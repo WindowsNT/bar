@@ -1,0 +1,78 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>Code</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Code</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Resources">
+      <UniqueIdentifier>{c2cab89e-12fd-4a95-8364-c5b9b3cb8b00}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Code">
+      <UniqueIdentifier>{f39967f6-f5d7-4585-8037-d7a7d3d33408}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="main.rc">
+      <Filter>Resources</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="app.ico">
+      <Filter>Resources</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="rdbg.rde">
+      <Filter>Resources</Filter>
+    </None>
+    <None Include="Readme.md">
+      <Filter>Resources</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="stdafx.h">
+      <Filter>Code</Filter>
+    </ClInclude>
+    <ClInclude Include="tags.h">
+      <Filter>Code</Filter>
+    </ClInclude>
+    <ClInclude Include="files.h">
+      <Filter>Code</Filter>
+    </ClInclude>
+    <ClInclude Include="list.hpp">
+      <Filter>Code</Filter>
+    </ClInclude>
+    <ClInclude Include="extract.hpp">
+      <Filter>Code</Filter>
+    </ClInclude>
+    <ClInclude Include="archive2.hpp">
+      <Filter>Code</Filter>
+    </ClInclude>
+    <ClInclude Include="sign.hpp">
+      <Filter>Code</Filter>
+    </ClInclude>
+    <ClInclude Include="update.hpp">
+      <Filter>Code</Filter>
+    </ClInclude>
+    <ClInclude Include="delete.hpp">
+      <Filter>Code</Filter>
+    </ClInclude>
+    <ClInclude Include="separate.hpp">
+      <Filter>Code</Filter>
+    </ClInclude>
+    <ClInclude Include="func.hpp">
+      <Filter>Code</Filter>
+    </ClInclude>
+    <ClInclude Include="merge.hpp">
+      <Filter>Code</Filter>
+    </ClInclude>
+    <ClInclude Include="ds.hpp">
+      <Filter>Code</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

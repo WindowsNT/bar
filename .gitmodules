@@ -1,0 +1,16 @@
+[submodule "tclap"]
+	path = tclap
+	url = https://github.com/eile/tclap.git
+[submodule "mt"]
+	path = mt
+	url = https://github.com/WindowsNT/mt
+[submodule "ThreadPool"]
+	path = ThreadPool
+	url = https://github.com/progschj/ThreadPool
+[submodule "rgf"]
+	path = rgf
+	url = https://github.com/WindowsNT/rgf
+[submodule "xml"]
+	path = xml
+	url = https://github.com/WindowsNT/xml
+
