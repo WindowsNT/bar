@@ -654,12 +654,18 @@ struct MAPPER
 		hMap.Close();
 	}
 
-	~MAPPER()
+	void Close()
 	{
-		Unmap();
 		if (ch)
 			CloseHandle(hF);
 		hF = INVALID_HANDLE_VALUE;
+		ch = false;
+	}
+
+	~MAPPER()
+	{
+		Unmap();
+		Close();
 	}
 };
 

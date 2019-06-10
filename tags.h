@@ -64,6 +64,10 @@ struct alignas(8) ITEMDATA
 	unsigned long long follows = 0;
 };
 
+struct alignas(8) DSIG
+{
+	TAG tag = { (unsigned int)TAGCODE::DIGITALSIGNATURE, sizeof(DSIG) };
+};
 
 
 struct TAGDATA2

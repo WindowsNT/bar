@@ -10,7 +10,7 @@ tlock<std::list<ystring>> Warnings;
 
 #include "func.hpp"
 
-#define USE_ADES
+//#define USE_ADES
 
 std::string Cmd()
 {

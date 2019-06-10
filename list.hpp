@@ -51,6 +51,27 @@ void List(bool ext = false)
 				wprintf(L"------------------------------------------------------------------------------------------------------------------------\r\n");
 			}
 		}
+#ifdef USE_ADES
+		if (tt->code == (unsigned int)TAGCODE::DIGITALSIGNATURE)
+		{
+			DSIG* h = (DSIG*)tt;
+			if (!ext)
+			{
+				AdES a;
+				AdES::LEVEL lev;
+				AdES::VERIFYRESULTS vr;
+				auto hr = a.Verify((char*)t.d.data() + sizeof(DSIG), t.d.size() - sizeof(DSIG), lev, (const char*)map, t.ofs,0,0,&vr);
+				if (FAILED(hr))
+				{
+					wprintf(L"Digital Signature verification failed.\r\n");
+				}
+				else
+				{
+					wprintf(L"Digital Signature verification OK.\r\n");
+				}
+			}
+		}
+#endif
 		if (tt->code == (unsigned int)TAGCODE::ITEMMETA)
 		{
 			cc.Color(FOREGROUND_GREEN | FOREGROUND_INTENSITY);
