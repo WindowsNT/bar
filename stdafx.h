@@ -25,7 +25,7 @@
 #include <tclap\CmdLine.h>
 
 #define BAR_MAJ_VERSION 1
-#define BAR_MIN_VERSION 25
+#define BAR_MIN_VERSION 26
 
 #include "mt\\rw.hpp"
 #include "mt\\tpool.h"

@@ -51,12 +51,12 @@ void List(bool ext = false)
 				wprintf(L"------------------------------------------------------------------------------------------------------------------------\r\n");
 			}
 		}
-#ifdef USE_ADES
 		if (tt->code == (unsigned int)TAGCODE::DIGITALSIGNATURE)
 		{
 			DSIG* h = (DSIG*)tt;
 			if (!ext)
 			{
+#ifdef USE_ADES
 				AdES a;
 				AdES::LEVEL lev;
 				AdES::VERIFYRESULTS vr;
@@ -69,9 +69,11 @@ void List(bool ext = false)
 				{
 					wprintf(L"Digital Signature verification OK.\r\n");
 				}
+else
+				wprintf(L"Digital Signature found, not compiled with AdES.\r\n");
+#endif
 			}
 		}
-#endif
 		if (tt->code == (unsigned int)TAGCODE::ITEMMETA)
 		{
 			cc.Color(FOREGROUND_GREEN | FOREGROUND_INTENSITY);
