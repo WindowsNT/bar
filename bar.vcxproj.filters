@@ -74,5 +74,8 @@
     <ClInclude Include="ds.hpp">
       <Filter>Code</Filter>
     </ClInclude>
+    <ClInclude Include="window.hpp">
+      <Filter>Code</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

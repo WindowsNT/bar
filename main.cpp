@@ -10,7 +10,9 @@ tlock<std::list<ystring>> Warnings;
 
 #include "func.hpp"
 
-//#define USE_ADES
+#if __has_include("ds.hpp")
+#define USE_ADES
+#endif
 
 std::string Cmd()
 {
@@ -20,7 +22,7 @@ std::string Cmd()
 	try
 	{
 		// Command
-		vector <string> c1 = { "a","d","ds","e","ee","l","ll","m","s","t","tt","u","uu","z" };
+		vector <string> c1 = { "a","d","ds","e","ee","l","ll","m","s","t","tt","u","uu","w","z" };
 		ValuesConstraint<string> con1(c1);
 		UnlabeledValueArg<string> co1("command", "Specifies the command", true, "", &con1, false, 0);
 		cmd.add(co1);
@@ -195,6 +197,7 @@ Backup Archiver Switches:
 #include "update.hpp"
 #include "extract.hpp"
 #include "merge.hpp"
+#include "window.hpp"
 
 // a r:\test.bar -r -x *\.git\* -x *.tlog --crcs 1 -s f:\tp2\pr
 // e r:\test.bar r:\bb
@@ -228,10 +231,20 @@ int wmain()
 	SetConsoleCtrlHandler((PHANDLER_ROUTINE)CtrlHandler, TRUE);
 	PrepareDoMatchTable();
 
-	auto ss = Cmd();
-	if (ss.length())
-		Help(ss.c_str());
+	if (__argc == 2 && GetFileAttributes(__wargv[1]) != 0xFFFFFFFF)
+	{
+		command = "w";
+		files.push_back(__wargv[1]);
+	}
+	else
+	{
+		auto ss = Cmd();
+		if (ss.length())
+			Help(ss.c_str());
+	}
 
+	if (command == L"w")
+		WV();
 
 	if (command != L"ll")
 		std::cout << "Backup ARchiver " << BAR_MAJ_VERSION << "." << BAR_MIN_VERSION << ", Copyright (C) Chourdakis Michael" << std::endl;

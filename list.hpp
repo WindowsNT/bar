@@ -53,10 +53,10 @@ void List(bool ext = false)
 		}
 		if (tt->code == (unsigned int)TAGCODE::DIGITALSIGNATURE)
 		{
-			DSIG* h = (DSIG*)tt;
 			if (!ext)
 			{
 #ifdef USE_ADES
+				DSIG* h = (DSIG*)tt;
 				AdES a;
 				AdES::LEVEL lev;
 				AdES::VERIFYRESULTS vr;
@@ -69,7 +69,7 @@ void List(bool ext = false)
 				{
 					wprintf(L"Digital Signature verification OK.\r\n");
 				}
-else
+#else
 				wprintf(L"Digital Signature found, not compiled with AdES.\r\n");
 #endif
 			}

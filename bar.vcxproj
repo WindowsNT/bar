@@ -235,6 +235,7 @@
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="tags.h" />
     <ClInclude Include="update.hpp" />
+    <ClInclude Include="window.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
