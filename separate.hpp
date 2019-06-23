@@ -6,6 +6,9 @@ unsigned long long fdf = 0;
 bool ReadFromDownload(RGF::GOD::DRIVE* drv, char* put, DWORD sz, LPDWORD A)
 {
 
+	if (EndProcess)
+		return false;
+
 	*A = 0;
 	if (fulldata.size() >= sz)
 	{

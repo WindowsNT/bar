@@ -77,5 +77,8 @@
     <ClInclude Include="window.hpp">
       <Filter>Code</Filter>
     </ClInclude>
+    <ClInclude Include="compare.hpp">
+      <Filter>Code</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

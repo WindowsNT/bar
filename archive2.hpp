@@ -106,6 +106,10 @@ void CALLBACK CreateAndWriteData(PTP_CALLBACK_INSTANCE, PVOID vv, PTP_WORK w)
 		return;
 
 	int algo = COMPRESS_ALGORITHM_LZMS;
+	if (sw.alg > 0)
+		algo = sw.alg;
+	if (algo >= COMPRESS_ALGORITHM_MAX)
+		algo = COMPRESS_ALGORITHM_LZMS;
 
 	FOUNDIT* f = (FOUNDIT*)vv;
 	if (w)

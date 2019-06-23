@@ -5,6 +5,7 @@ An archiver with multithreading capabilities which uses remote differential comp
 ## Commands
 * a  - archive
 * d  - delete
+* cc - compare
 * e  - extract
 * ee - extract from archive folder (+ incrementals)
 * l  - list

@@ -21,11 +21,14 @@
 #include <security.h>
 #include <Schnlsp.h>
 #include <regex>
+#include <io.h>
+#include <fcntl.h>
+
 #include <functional>
 #include <tclap\CmdLine.h>
 
 #define BAR_MAJ_VERSION 1
-#define BAR_MIN_VERSION 26
+#define BAR_MIN_VERSION 28
 
 #include "mt\\rw.hpp"
 #include "mt\\tpool.h"
@@ -284,6 +287,7 @@ struct SWITCHES
 	bool R = false; // Recursive
 	int MT = 0; // Maximum Threads
 	int threads = 0;
+	int alg = 0;
 	int sigs = 0;
 	int pause = 0;
 	bool Y = false; // yes to all queryes

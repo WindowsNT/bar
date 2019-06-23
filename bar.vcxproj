@@ -223,6 +223,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="archive2.hpp" />
+    <ClInclude Include="compare.hpp" />
     <ClInclude Include="delete.hpp" />
     <ClInclude Include="ds.hpp" />
     <ClInclude Include="extract.hpp" />

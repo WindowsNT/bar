@@ -272,6 +272,9 @@ void FullAndIncr(std::vector<FOUNDIT>& fld, std::map<unsigned long long, FULLAND
 			memset(a2, 0, 10);	memcpy_s(a2, 10, fn + 15, 2);	filet.wMinute = (WORD)atoi(a2);
 			memset(a2, 0, 10);	memcpy_s(a2, 10, fn + 17, 2);	filet.wSecond = (WORD)atoi(a2);
 
+			if (filet.wYear <= 2000)
+				return 0;
+
 			if (f.length() < 34)
 				return 1;
 
@@ -281,6 +284,9 @@ void FullAndIncr(std::vector<FOUNDIT>& fld, std::map<unsigned long long, FULLAND
 			memset(a2, 0, 10);	memcpy_s(a2, 10, fn + 28, 2);	file2.wHour = (WORD)atoi(a2);
 			memset(a2, 0, 10);	memcpy_s(a2, 10, fn + 30, 2);	file2.wMinute = (WORD)atoi(a2);
 			memset(a2, 0, 10);	memcpy_s(a2, 10, fn + 32, 2);	file2.wSecond = (WORD)atoi(a2);
+
+			if (file2.wYear <= 2000)
+				return 0;
 
 			return 2;
 		};

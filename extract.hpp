@@ -1,9 +1,100 @@
 #pragma once
 
 
+RWMUTEX mCR;
+HRESULT CompareRemove(list<FOUNDIT>* CompareList,ITEMMETA* m,TAGDATA& t,std::vector<char>& r,const char* mapz = 0,size_t szz = 0)
+{
+	RWMUTEXLOCKWRITE wr(&mCR);
+	if (CompareList && m->unccrc)
+	{
+		auto& li = *CompareList;
+		// Find to list
+
+		std::list<FOUNDIT>::iterator i = li.begin();
+		while (i != li.end())
+		{
+			if (i->rel != t.fil)
+			{
+				i++;
+				continue;
+			}
+
+			MAPPER mm(i->full.c_str());
+			auto m3 = mm.Map();
+			if (!m3)
+			{
+				i++;
+				return S_OK;
+			}
+
+			CRC c3;
+			auto cc3 = c3.findcrc32((char*)m3, mm.fs());
+			if (m->unccrc != cc3)
+			{
+				if (!i->DataForCompare.empty())
+				{
+					// We must test if diff will result in m3
+					DIFFLIB::DIFF diff;
+
+					shared_ptr<DIFFLIB::MemoryRdcFileReader> m1;
+					vector<char> rxx;
+					m1 = make_shared<DIFFLIB::MemoryRdcFileReader>(mapz, szz);
+					shared_ptr<DIFFLIB::MemoryRdcFileReader> r1;
+					r1 = make_shared<DIFFLIB::MemoryRdcFileReader>(i->DataForCompare.data(), i->DataForCompare.size());
+
+					DIFFLIB::MemoryDiffWriter wr;
+					auto res = diff.Reconstruct(r1.get(), m1.get(), 0, wr);
+					if (SUCCEEDED(res))
+					{
+						i->DataForCompare = wr.p();
+					}
+				}
+				else
+				{
+					i->DataForCompare = r;
+				}
+				i++;
+				return E_FAIL;
+			}
+			else
+			{
+				if (!i->DataForCompare.empty())
+				{
+					// We must test if diff will result in m3
+					DIFFLIB::DIFF diff;
+
+					shared_ptr<DIFFLIB::MemoryRdcFileReader> m1;
+					vector<char> rxx;
+					m1 = make_shared<DIFFLIB::MemoryRdcFileReader>(mapz,szz);
+					shared_ptr<DIFFLIB::MemoryRdcFileReader> r1;
+					r1 = make_shared<DIFFLIB::MemoryRdcFileReader>(i->DataForCompare.data(),i->DataForCompare.size());
+
+					DIFFLIB::MemoryDiffWriter wr;
+					auto res = diff.Reconstruct(r1.get(), m1.get(), 0, wr);
+					if (SUCCEEDED(res))
+					{
+						CRC c4;
+						auto cc4 = c4.findcrc32((char*)wr.p().data(), wr.sz());
+						if (cc3 == cc4)
+						{
+							li.erase(i++);
+							return S_OK;
+						}
+					}
+					i++;
+					return E_FAIL;
+				}
+				li.erase(i++);
+				return S_OK;
+			}
+		}
+	}
+	return E_NOINTERFACE;
+
+}
 
 tlock<std::map<unsigned int, std::tuple<TAGDATA*,ITEMMETA*>>> DupCache;
-bool ExtractData(const char* mapz,TAGDATA* tt,bool Testing,std::vector<TAGDATA>& vtags,ystring *uu = 0)
+bool ExtractData(const char* mapz,TAGDATA* tt,bool Testing,std::vector<TAGDATA>& vtags,ystring *uu = 0,list<FOUNDIT>* CompareList = 0,bool TestingFolder = false)
 {
 	using namespace std;
 	if (sw.threads > 0)
@@ -70,7 +161,7 @@ bool ExtractData(const char* mapz,TAGDATA* tt,bool Testing,std::vector<TAGDATA>&
 			return false;
 		}
 
-		return ExtractData(mapz, get<0>(tg), Testing, vtags,&fi);
+		return ExtractData(mapz, get<0>(tg), Testing, vtags,&fi,CompareList,TestingFolder);
 	};
 
 	try
@@ -97,7 +188,16 @@ bool ExtractData(const char* mapz,TAGDATA* tt,bool Testing,std::vector<TAGDATA>&
 			if (d.type == (unsigned int)DATATYPE::DIFF)
 			{
 				if (Testing)
+				{
+					// Existing comparison
+					vector<char>vdd;
+					auto hr = CompareRemove(CompareList, m, t,vdd,mapz + d.ofs,d.s);
+					if (hr == E_NOINTERFACE)
+					{
+
+					}
 					continue;
+				}
 
 				DIFFLIB::DIFF diff;
 
@@ -228,6 +328,12 @@ bool ExtractData(const char* mapz,TAGDATA* tt,bool Testing,std::vector<TAGDATA>&
 						}
 					}
 
+					if (CompareList && !m->unccrc)
+						RR = true;
+
+					// Existing comparison
+					CompareRemove(CompareList, m, t,r);
+
 					// Signature
 					DIFFLIB::DIFF diff;
 					DIFFLIB::MemoryRdcFileReader mr((const char*)r.data(), r.size());
@@ -302,8 +408,9 @@ HRESULT OneDownload(RGF::GOD::ONEDRIVE& one, ystring fid,TEMPFILE& fil)
 		return hr;
 	return fil.Write(d.data(), d.size());
 }
+list<FOUNDIT> CompareList;
 
-void Extract(bool Testing = false,bool Folder = false)
+void Extract(bool Testing = false, bool Folder = false, bool Compare = false)
 {
 	using namespace std;
 	ccx = make_shared<CONSOLECOLOR>();
@@ -324,10 +431,24 @@ void Extract(bool Testing = false,bool Folder = false)
 			Help(0, "e");
 			return;
 		}
+		if (files.size() < 2 && Compare)
+		{
+			Help(0, "c");
+			return;
+		}
 		if (files.size() < 1 && Testing)
 		{
 			Help(0, "t");
 			return;
+		}
+
+		if (Compare && CompareList.empty())
+		{
+			// Search for files
+			tpoollib::tpool<> p;
+			if (sw.threads > 0 && UseTP2 == false)
+				p.Create(1, sw.threads);
+			BuildFileList(CompareList, p);
 		}
 
 		ystring ffid;
@@ -457,11 +578,11 @@ void Extract(bool Testing = false,bool Folder = false)
 				for (auto& ff : fai)
 				{
 					files[0] = ff.second.full;
-					Extract(Testing, false);
+					Extract(Testing, false,Compare);
 					for (auto& fx : ff.second.incrs)
 					{
 						files[0] = fx.full;
-						Extract(Testing, false);
+						Extract(Testing, false,Compare);
 					}
 				}
 			}
@@ -553,19 +674,18 @@ void Extract(bool Testing = false,bool Folder = false)
 
 			if (tt->code == (unsigned int)TAGCODE::ITEMMETA)
 			{
-
 				if (sw.threads == 0)
 				{
-					bool RX = ExtractData(map, &t, Testing,vtags);
+					bool RX = ExtractData(map, &t, Testing,vtags,0,Compare ? &CompareList : 0,Folder);
 					if (!RX && !EndProcess)
-						Warnings->emplace_back(ystring().Format(L"Extracting %s failed", fi.c_str()));
+						Warnings->emplace_back(ystring().Format(L"%s failed", fi.c_str()));
 				}
 				else
 				{
 					p2results.emplace_back(p2.enqueue([&]() -> int {
-						bool RX = ExtractData(map, &t, Testing,vtags);
+						bool RX = ExtractData(map, &t, Testing,vtags, 0, Compare ? &CompareList : 0, Folder);
 						if (!RX && !EndProcess)
-							Warnings->emplace_back(ystring().Format(L"Extracting %s failed", fi.c_str()));
+							Warnings->emplace_back(ystring().Format(L"%s failed", fi.c_str()));
 						return 1;
 						}));
 				}

@@ -7,11 +7,12 @@ public:
 	class root
 	{
 	public:
+		ITEMMETA i;
 		std::map<std::wstring,root> sub;
 	};
 	root r;
 
-	void push(const wchar_t* p)
+	void push(const wchar_t* p, ITEMMETA& m)
 	{
 		std::vector<wchar_t> pp(wcslen(p) + 2);
 		memcpy(pp.data(),p, wcslen(p) * 2);
@@ -23,11 +24,13 @@ public:
 			if (!p2)
 			{
 				root r2;
+				r2.i = m;
 				rr->sub[px] = r2;
 				break;
 			}
 			*p2 = 0;
 			root r2;
+			r2.i = m;
 			if (rr->sub.find(px) == rr->sub.end())
 				rr->sub[px] = r2;
 			rr = &rr->sub[px];
@@ -52,6 +55,7 @@ void AutoSizeLVColumn(HWND hL, int j)
 		SendMessage(hL, LVM_SETCOLUMNWIDTH, j, LVSCW_AUTOSIZE);
 }
 
+dir d;
 
 LRESULT CALLBACK Main_DP(HWND hh, UINT mm, WPARAM ww, LPARAM ll)
 {
@@ -87,6 +91,11 @@ LRESULT CALLBACK Main_DP(HWND hh, UINT mm, WPARAM ww, LPARAM ll)
 
 		return 0;
 	}
+	case WM_USER + 2:
+	{
+		return 0;
+
+	}
 
 	case WM_USER + 1:
 	{
@@ -108,7 +117,6 @@ LRESULT CALLBACK Main_DP(HWND hh, UINT mm, WPARAM ww, LPARAM ll)
 			return 0;
 		}
 
-		dir d;
 		for (auto& t : tags)
 		{
 			TAG* tt = (TAG*)t.d.data();
@@ -124,11 +132,10 @@ LRESULT CALLBACK Main_DP(HWND hh, UINT mm, WPARAM ww, LPARAM ll)
 				memcpy(fn.data(), pp + sizeof(ITEMMETA), fn.size());
 				ystring fnn = fn.data();
 
-				d.push(fnn.c_str());
-
+				d.push(fnn.c_str(),*h);
 			}
 		}
-
+		SendMessage(hh, WM_USER + 2, 0, 0);
 		return 0;
 	}
 

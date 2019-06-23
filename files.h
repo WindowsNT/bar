@@ -690,6 +690,8 @@ struct FOUNDIT
 	unsigned int linkfid = 0;
 	HRESULT diffsearch = E_NOINTERFACE;
 
+	std::vector<char> DataForCompare;
+
 	ystring PathOnly()
 	{
 		std::vector<wchar_t> tx(10000);

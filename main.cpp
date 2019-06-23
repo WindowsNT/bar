@@ -22,7 +22,7 @@ std::string Cmd()
 	try
 	{
 		// Command
-		vector <string> c1 = { "a","d","ds","e","ee","l","ll","m","s","t","tt","u","uu","w","z" };
+		vector <string> c1 = { "a","c","cc","d","ds","e","ee","l","ll","m","s","t","tt","u","uu","w","z" };
 		ValuesConstraint<string> con1(c1);
 		UnlabeledValueArg<string> co1("command", "Specifies the command", true, "", &con1, false, 0);
 		cmd.add(co1);
@@ -54,6 +54,7 @@ std::string Cmd()
 
 		ValueArg<string> rgf("", "rgf", "rgf", false, "", "string", nullptr);	cmd.add(rgf);
 		ValueArg<string> keep("", "keep", "keep", false, "", "int", nullptr);	cmd.add(keep);
+		ValueArg<string> alg("", "alg", "alg", false, "0", "int", nullptr);	cmd.add(alg);
 
 		// Password
 		ValueArg<string> pwd("p", "password", "password", false, "", "string", nullptr);	cmd.add(pwd);
@@ -81,6 +82,7 @@ std::string Cmd()
 		sw.pwd = pwd.getValue();
 		sw.rgf = rgf.getValue();
 		sw.keep = keep.getValue();
+		sw.alg = atoi(alg.getValue().c_str());
 		sw.dup = dups.getValue();
 		sw.threads = atoi(threads.getValue().c_str());
 		sw.pause = atoi(pause.getValue().c_str());
@@ -198,6 +200,8 @@ Backup Archiver Switches:
 #include "extract.hpp"
 #include "merge.hpp"
 #include "window.hpp"
+#include "compare.hpp"
+
 
 // a r:\test.bar -r -x *\.git\* -x *.tlog --crcs 1 -s f:\tp2\pr
 // e r:\test.bar r:\bb
@@ -205,6 +209,7 @@ Backup Archiver Switches:
 
 int wmain()
 {
+	SetConsoleOutputCP(CP_UTF8);
 
 	WSADATA wData;
 	WSAStartup(MAKEWORD(2, 2), &wData);
@@ -247,7 +252,7 @@ int wmain()
 		WV();
 
 	if (command != L"ll")
-		std::cout << "Backup ARchiver " << BAR_MAJ_VERSION << "." << BAR_MIN_VERSION << ", Copyright (C) Chourdakis Michael" << std::endl;
+		std::wcout << L"Backup ARchiver " << BAR_MAJ_VERSION << "." << BAR_MIN_VERSION << L", Copyright (C) Chourdakis Michael" << std::endl;
 
 	if (command == L"a")
 		Archive2();
@@ -257,6 +262,12 @@ int wmain()
 
 	if (command == L"e")
 		Extract();
+
+	if (command == L"c")
+		Compare();
+
+	if (command == L"cc")
+		Compare(true);
 
 	if (command == L"m")
 		Merge();
@@ -293,6 +304,7 @@ int wmain()
 		ds();
 #endif
 
+	_setmode(_fileno(stdout), _O_U16TEXT);
 	Warnings.readlock([](const list<ystring>& w)
 		{
 			for (auto& rr : w)
