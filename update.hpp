@@ -579,9 +579,10 @@ void Update(bool Folder = false)
 		}
 
 		// Will do on first fai
+		int incs = 1;
 		for (auto& faii : fai)
 		{
-			wprintf(L"Getting full backup %s...\r\n", faii.second.full.c_str());
+			wprintf(L"\r[%i] Getting full backup %s...", incs++, faii.second.full.c_str());
 			sL = faii.second.sT;
 			auto fx = files;
 
@@ -603,10 +604,12 @@ void Update(bool Folder = false)
 			if (FAILED(hrx))
 				return;
 			
+			printf("\r\n");
 			sw.incr.push_back(t.fn.c_str());
+			int incs = 1;
 			for (auto& more : faii.second.incrs)
 			{
-				wprintf(L"Getting incremental backup %s...\r\n", more.full.c_str());
+				wprintf(L"\r[%i] Getting incremental backup %s...", incs++,more.full.c_str());
 				files.clear();
 				if (Remote)
 					files.push_back(more.fid);
@@ -626,10 +629,12 @@ void Update(bool Folder = false)
 
 				sw.incr.push_back(t.fn.c_str());
 			}
+			printf("\r\n");
 
 			files = fx;
 			break;
 		}
+		printf("\r\n");
 	}
 
 	ccx = make_shared<CONSOLECOLOR>();
@@ -659,9 +664,10 @@ void Update(bool Folder = false)
 			When it's found, either don't put it (if same) or put a diff
 		*/
 
+		int ias = 1;
 		for (auto& a : sw.incr)
 		{
-			wprintf(L"Reading incremental archive ...\r\n");
+			wprintf(L"\r[%i] Reading incremental archive ...",ias++);
 			INCR ii;
 			ii.f = a;
 			ii.m = make_shared<MAPPER>(a.c_str(), PAGE_READONLY);
@@ -670,6 +676,7 @@ void Update(bool Folder = false)
 				ii.maxfid = TagCollect((const char*)ii.map, ii.m->fs(), ii.tags,ii.vtags);
 			incrs.push_back(ii);
 		}
+		wprintf(L"\r\n");
 
 		auto itemss = items.size();
 		size_t iidx = 0;

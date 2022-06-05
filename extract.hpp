@@ -2,8 +2,9 @@
 
 
 RWMUTEX mCR;
-HRESULT CompareRemove(list<FOUNDIT>* CompareList,ITEMMETA* m,TAGDATA& t,std::vector<char>& r,const char* mapz = 0,size_t szz = 0)
+HRESULT CompareRemove(std::list<FOUNDIT>* CompareList,ITEMMETA* m,TAGDATA& t,std::vector<char>& r,const char* mapz = 0,size_t szz = 0)
 {
+	using namespace std;
 	RWMUTEXLOCKWRITE wr(&mCR);
 	if (CompareList && m->unccrc)
 	{
@@ -94,7 +95,7 @@ HRESULT CompareRemove(list<FOUNDIT>* CompareList,ITEMMETA* m,TAGDATA& t,std::vec
 }
 
 tlock<std::map<unsigned int, std::tuple<TAGDATA*,ITEMMETA*>>> DupCache;
-bool ExtractData(const char* mapz,TAGDATA* tt,bool Testing,std::vector<TAGDATA>& vtags,ystring *uu = 0,list<FOUNDIT>* CompareList = 0,bool TestingFolder = false)
+bool ExtractData(const char* mapz,TAGDATA* tt,bool Testing,std::vector<TAGDATA>& vtags,ystring *uu = 0,std::list<FOUNDIT>* CompareList = 0,bool TestingFolder = false)
 {
 	using namespace std;
 	if (sw.threads > 0)
@@ -408,7 +409,7 @@ HRESULT OneDownload(RGF::GOD::ONEDRIVE& one, ystring fid,TEMPFILE& fil)
 		return hr;
 	return fil.Write(d.data(), d.size());
 }
-list<FOUNDIT> CompareList;
+std::list<FOUNDIT> CompareList;
 
 void Extract(bool Testing = false, bool Folder = false, bool Compare = false)
 {

@@ -128,7 +128,7 @@ HRESULT Separate2(RGF::GOD::DRIVE* drv = 0)
 				ITEMDATA* m = (ITEMDATA*)tt;
 				if (m->dtt == (unsigned int)DATATYPE::DATA)
 				{
-					printf("\r\n");
+//					printf("\r\n");
 					break;
 				}
 
@@ -156,7 +156,7 @@ HRESULT Separate2(RGF::GOD::DRIVE* drv = 0)
 		}
 		fdf = 0;
 		fulldata.clear();
-		printf("\r\n");
+//		printf("\r\n");
 		return S_OK;
 	}
 	catch (...)

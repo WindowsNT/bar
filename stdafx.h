@@ -1,3 +1,5 @@
+#define _SILENCE_CXX17_RESULT_OF_DEPRECATION_WARNING 
+
 #include <winsock2.h>
 #include <ws2tcpip.h>
 #include <windows.h>
@@ -28,7 +30,7 @@
 #include <tclap\CmdLine.h>
 
 #define BAR_MAJ_VERSION 1
-#define BAR_MIN_VERSION 28
+#define BAR_MIN_VERSION 30
 
 #include "mt\\rw.hpp"
 #include "mt\\tpool.h"

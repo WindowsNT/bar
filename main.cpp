@@ -233,7 +233,7 @@ int wmain()
 	SetPriorityClass(GetCurrentProcess(), IDLE_PRIORITY_CLASS);
 	hAppInstance = GetModuleHandle(0);
 	hIcon1 = LoadIcon(hAppInstance, _T("ICON_1"));
-	SetConsoleCtrlHandler((PHANDLER_ROUTINE)CtrlHandler, TRUE);
+//	SetConsoleCtrlHandler((PHANDLER_ROUTINE)CtrlHandler, TRUE);
 	PrepareDoMatchTable();
 
 	if (__argc == 2 && GetFileAttributes(__wargv[1]) != 0xFFFFFFFF)
